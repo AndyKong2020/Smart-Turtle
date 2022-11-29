@@ -1,2 +1,2 @@
 # Smart-Turtle
-Auto-pilot car based on ROS.
+Autopilot car based on ROS.
