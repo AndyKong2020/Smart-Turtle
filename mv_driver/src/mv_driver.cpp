@@ -30,10 +30,10 @@ using pcl_ptr = pcl::PointCloud<pcl::PointXYZ>::Ptr;
 
 // 相机内参
 const double camera_factor = 1000;
-const double camera_cx = 311.704;
-const double camera_cy = 245.82;
-const double camera_fx = 474.055;
-const double camera_fy = 474.055;
+const double camera_cx = 652.0706176757812;
+const double camera_cy = 359.6287536621094;
+const double camera_fx = 910.8374633789062;
+const double camera_fy = 910.6951904296875;
 
 //
 ros::Publisher img_pub;
@@ -73,18 +73,11 @@ pcl_ptr points_to_pcl(const rs2::points &points) {
     cloud->points.resize(points.size());
     auto ptr = points.get_vertices();
     for (auto &p : cloud->points) {
-        if (
-                ((ptr->x * ptr->x) + (ptr->y * ptr->y) + (ptr->z * ptr->z)) < 2.6 &
-                (ptr->y + ptr->z) < 1.5 &(ptr->y + ptr->z) > 0.5){
-            p.x = ptr->x;
-            p.y = ptr->y;
-            p.z = ptr->z;
-        }
-        else{
-            p.x = 0.5;
-            p.y = 0;
-            p.z = 0;
-        }
+
+        p.x = ptr->x;
+        p.y = ptr->y;
+        p.z = ptr->z;
+
         ptr++;
     }
 
@@ -118,16 +111,16 @@ void get_img(ros::NodeHandle nh) {
     for (const auto &sensor : sensors) {
         setToDefault(sensor);
     }
-    change_sensor_option(sensors[0],24,15);
-    change_sensor_option(sensors[0],0,17);
+//    change_sensor_option(sensors[0],24,15);
+//    change_sensor_option(sensors[0],0,17);
     //change_sensor_option(sensors[0],1,34);
     //sensors[0].set_option(RS2_OPTION_MAX_DISTANCE, 0.5);
 
     rs2::pipeline pipe;     //Contruct a pipeline which abstracts the device
 	rs2::config cfg;    //Create a configuration for configuring the pipeline with a non default profile
 
-	cfg.enable_stream(RS2_STREAM_COLOR, 640, 480, RS2_FORMAT_BGR8, 30);
-	cfg.enable_stream(RS2_STREAM_DEPTH, 640, 480, RS2_FORMAT_Z16, 30);
+	cfg.enable_stream(RS2_STREAM_COLOR, 1280, 720, RS2_FORMAT_BGR8, 30);
+	cfg.enable_stream(RS2_STREAM_DEPTH, 1280, 720, RS2_FORMAT_Z16, 30);
 
     rs2::pipeline_profile selection = pipe.start(cfg);
 
@@ -156,21 +149,21 @@ void get_img(ros::NodeHandle nh) {
 
         //create cv::Mat from rs2::frame
         Mat depth_;
-        Mat color(Size(640, 480), CV_8UC3);
+        Mat color(Size(1280, 720), CV_8UC3);
         memcpy(color.data, color_frame.get_data(), 921600);
-        Mat deep(Size(640, 480), CV_16UC1);
+        Mat deep(Size(1280, 720), CV_16UC1);
         memcpy(deep.data, depth_frame.get_data(), 614400);
 
 
-        Mat dst3(Size(640, 480), CV_16UC1);
+        Mat dst3(Size(1280, 720), CV_16UC1);
         ushort *p;
         ushort *q;
 
 		//float scale = frames.get_depth_scale();
-		for (int y = 0; y < 480; y++)
+		for (int y = 0; y < 720; y++)
 		{
 			q = deep.ptr<ushort>(y);
-			for (int x = 0; x < 640; x++)
+			for (int x = 0; x < 1280; x++)
 			{
 				//dst->imageData[y * depth_info.height + x] = depth__data[y * depth_info.height + x];
 				ushort d = q[x];
