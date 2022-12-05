@@ -1,2 +1,0 @@
-ydlidar_ros_driver
--DCATKIN_DEVEL_PREFIX=/home/andynuc/ydlidar_ws/devel -DCMAKE_INSTALL_PREFIX=/home/andynuc/ydlidar_ws/install -G Unix Makefiles
