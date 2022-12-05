@@ -62,7 +62,7 @@ public:
         ros::param::get("dafu_offset_H", dafu_offset_H);
         ros::param::get("dafu_offset_W", dafu_offset_W);
         node_.param("/resolution_idx", resolution_idx, 1);
-        node_.param("/framerate", framerate_, 360);
+        node_.param("/framerate", framerate_, 120);
         node_.getParam("/is_record", is_record_);
         node_.getParam("/rcd_path", rcd_path_);
         rcd_path_=rcd_path_+ns+"/";
@@ -76,8 +76,8 @@ public:
         mv_driver=new MVCamera;
         mv_driver->Init(deviceID);
         mv_driver->SetDefault();
-        mv_driver->SetExposureTime(autoexposure_, exposure_);
-        mv_driver->SetResolution(resolution_idx, height, width, offset_H, offset_W);
+        mv_driver->SetExposureTime(autoexposure_, 40000);
+        mv_driver->SetResolution(0, 640, 480, 0, 0);
         mv_driver->SetFPS(fps_mode);
         mv_driver->Play();
 
