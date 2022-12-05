@@ -1,0 +1,4 @@
+    <launch>
+        <node name="mv_driver" pkg="mv_driver" type="mv_driver_node" output="screen" respawn="true"/>
+        <node name="openvino_identify" pkg="openvino_identify" type="listener.py" />
+    </launch>
