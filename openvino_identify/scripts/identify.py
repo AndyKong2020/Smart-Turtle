@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import cv2
 import time
 import rospy
@@ -23,7 +24,6 @@ class cv_yolo_ros():
         rospy.init_node('cv_yolo_ros_node', anonymous=True)
         self.flag = False
         self.inference_rate = rospy.get_param("/inference_rate", 30)
-        self.inference_img_size = rospy.get_param("/inference_img_size", 640)
         self.img_in_topic = rospy.get_param("/img_in_topic", "/img_raw")
         self.img_out = rospy.get_param("/img_out", True)
         self.img_out_topic = rospy.get_param("/img_out_topic", "/detected")
@@ -32,12 +32,14 @@ class cv_yolo_ros():
         self.nms_threshold = rospy.get_param("/nms_threshold", 0.4)
 
         self.class_file = rospy.get_param("/class_file", "classes.txt")
-        self.onnx_file = rospy.get_param("/onnx_file", "best.onnx")
-        self.backend = rospy.get_param("/backend", cv2.dnn.DNN_BACKEND_INFERENCE_ENGINE)
+        self.onnx_file = rospy.get_param("/onnx_file", "best-sim.onnx")
+        # self.backend = rospy.get_param("/backend", cv2.dnn.DNN_BACKEND_INFERENCE_ENGINE)
+        self.backend = rospy.get_param("/backend", cv2.dnn.DNN_BACKEND_CUDA)
         # cv2.dnn.DNN_BACKEND_CUDA for GPU,
         # cv2.dnn.DNN_BACKEND_OPENCV for CPU
         # cv2.dnn.DNN_BACKEND_INFERENCE_ENGINE for OpenVINO
-        self.target = rospy.get_param("/target", cv2.dnn.DNN_TARGET_CPU)
+        # self.target = rospy.get_param("/target", cv2.dnn.DNN_TARGET_CPU)
+        self.target = rospy.get_param("/target", cv2.dnn.DNN_TARGET_CUDA)
         # Either DNN_TARGET_CUDA_FP16 or DNN_TARGET_CUDA must be enabled for GPU
         # cv2.dnn.DNN_TARGET_CPU for CPU or OpenVINO
 
@@ -45,7 +47,7 @@ class cv_yolo_ros():
         self.net.setPreferableBackend(self.backend)
         self.net.setPreferableTarget(self.target)
         self.layer_names = self.net.getLayerNames()
-        self.output_layers = [self.layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
+        self.output_layers = [self.layer_names[i-1] for i in self.net.getUnconnectedOutLayers()]
 
         self.img_subscriber = rospy.Subscriber(self.img_in_topic, Image, self.img_callback)
         self.img_publisher = rospy.Publisher(self.img_out_topic, Image, queue_size=1)
@@ -74,9 +76,9 @@ if __name__ == '__main__':
                 start = time.time()
                 frame = cyr.img_cb_in  # temporal backup
                 height, width, channels = frame.shape
-                x_factor = width / float(cyr.inference_img_size)
-                y_factor = height / float(cyr.inference_img_size)
-                blob = cv2.dnn.blobFromImage(frame, 0.003921569, (cyr.inference_img_size, cyr.inference_img_size),
+                x_factor = width / float(640)
+                y_factor = height / float(480)
+                blob = cv2.dnn.blobFromImage(frame, 0.003921569, (640, 480),
                                              (0, 0, 0), swapRB=True, crop=False)
                 cyr.net.setInput(blob)
                 outputs = cyr.net.forward(cyr.output_layers)
