@@ -33,13 +33,11 @@ class cv_yolo_ros():
 
         self.class_file = rospy.get_param("/class_file", "classes.txt")
         self.onnx_file = rospy.get_param("/onnx_file", "best-sim.onnx")
-        # self.backend = rospy.get_param("/backend", cv2.dnn.DNN_BACKEND_INFERENCE_ENGINE)
-        self.backend = rospy.get_param("/backend", cv2.dnn.DNN_BACKEND_CUDA)
+        self.backend = rospy.get_param("/backend", cv2.dnn.DNN_BACKEND_INFERENCE_ENGINE)
         # cv2.dnn.DNN_BACKEND_CUDA for GPU,
         # cv2.dnn.DNN_BACKEND_OPENCV for CPU
         # cv2.dnn.DNN_BACKEND_INFERENCE_ENGINE for OpenVINO
-        # self.target = rospy.get_param("/target", cv2.dnn.DNN_TARGET_CPU)
-        self.target = rospy.get_param("/target", cv2.dnn.DNN_TARGET_CUDA)
+        self.target = rospy.get_param("/target", cv2.dnn.DNN_TARGET_CPU)
         # Either DNN_TARGET_CUDA_FP16 or DNN_TARGET_CUDA must be enabled for GPU
         # cv2.dnn.DNN_TARGET_CPU for CPU or OpenVINO
 
@@ -47,7 +45,7 @@ class cv_yolo_ros():
         self.net.setPreferableBackend(self.backend)
         self.net.setPreferableTarget(self.target)
         self.layer_names = self.net.getLayerNames()
-        self.output_layers = [self.layer_names[i-1] for i in self.net.getUnconnectedOutLayers()]
+        self.output_layers = [self.layer_names[i - 1] for i in self.net.getUnconnectedOutLayers()]
 
         self.img_subscriber = rospy.Subscriber(self.img_in_topic, Image, self.img_callback)
         self.img_publisher = rospy.Publisher(self.img_out_topic, Image, queue_size=1)
