@@ -28,28 +28,28 @@ class DetectLane:
             srv_detect_lane = Server(DetectLaneParamsConfig, self.cbGetDetectLaneParam)
 
         self.sub_image_type = "raw"  # you can choose image type "compressed", "raw"
-        self.pub_image_type = "compressed"  # you can choose image type "compressed", "raw"
+        self.pub_image_type = "raw"  # you can choose image type "compressed", "raw"
 
         # subscribes raw image:/camera/image_projected_compensated
-        self.sub_image_original = rospy.Subscriber('/detect/image_input', Image, self.cbFindLane, queue_size=1)
+        self.sub_image_original = rospy.Subscriber('/detect/image_input', Image, self.cbFindLane, queue_size=3)
 
         # publishes lane image in compressed type
-        self.pub_image_lane = rospy.Publisher('/detect/image_output/compressed', CompressedImage, queue_size=1)
+        self.pub_image_lane = rospy.Publisher('/detect/image_output/compressed', CompressedImage, queue_size=3)
 
         if self.is_calibration_mode == True:
             # publishes lane image in compressed type
             self.pub_image_right = rospy.Publisher('/detect/image_output_sub1/compressed', CompressedImage,
                                                    queue_size=1)
-            self.pub_image_left = rospy.Publisher('/detect/image_output_sub2/compressed', CompressedImage, queue_size=1)
+            self.pub_image_left = rospy.Publisher('/detect/image_output_sub2/compressed', CompressedImage, queue_size=3)
 
         # output :raw
         self.pub_lane = rospy.Publisher('/detect/lane', Float64, queue_size=1)
 
         # subscribes state : left line reliability
-        self.pub_left_line_reliability = rospy.Publisher('/detect/left_line_reliability', UInt8, queue_size=1)
+        self.pub_left_line_reliability = rospy.Publisher('/detect/left_line_reliability', UInt8, queue_size=3)
 
         # subscribes state : right line reliability
-        self.pub_right_line_reliability = rospy.Publisher('/detect/right_line_reliability', UInt8, queue_size=1)
+        self.pub_right_line_reliability = rospy.Publisher('/detect/right_line_reliability', UInt8, queue_size=3)
 
         self.cvBridge = CvBridge()
 
