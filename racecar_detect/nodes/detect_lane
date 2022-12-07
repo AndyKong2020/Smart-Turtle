@@ -11,7 +11,8 @@ from sensor_msgs.msg import Image, CompressedImage
 from dynamic_reconfigure.server import Server
 from racecar_detect.cfg import DetectLaneParamsConfig
 
-class DetectLane():
+
+class DetectLane:
     def __init__(self):
         self.hue_white_l = rospy.get_param("~detect/lane/white/hue_l", 0)
         self.hue_white_h = rospy.get_param("~detect/lane/white/hue_h", 25)
@@ -20,27 +21,29 @@ class DetectLane():
         self.lightness_white_l = rospy.get_param("~detect/lane/white/lightness_l", 180)
         self.lightness_white_h = rospy.get_param("~detect/lane/white/lightness_h", 255)
 
-        self.is_calibration_mode = rospy.get_param("~is_detection_calibration_mode", False)
+        # self.is_calibration_mode = rospy.get_param("~is_detection_calibration_mode", False)
+        self.is_calibration_mode = False
 
         if self.is_calibration_mode == True:
             srv_detect_lane = Server(DetectLaneParamsConfig, self.cbGetDetectLaneParam)
 
-        self.sub_image_type = "raw"         # you can choose image type "compressed", "raw"
+        self.sub_image_type = "raw"  # you can choose image type "compressed", "raw"
         self.pub_image_type = "compressed"  # you can choose image type "compressed", "raw"
 
         # subscribes raw image:/camera/image_projected_compensated
-        self.sub_image_original = rospy.Subscriber('MVCamera/image_raw', Image, self.cbFindLane, queue_size = 1)
+        self.sub_image_original = rospy.Subscriber('/detect/image_input', Image, self.cbFindLane, queue_size=1)
 
         # publishes lane image in compressed type
-        self.pub_image_lane = rospy.Publisher('/detect/image_output/compressed', CompressedImage, queue_size = 1)
+        self.pub_image_lane = rospy.Publisher('/detect/image_output/compressed', CompressedImage, queue_size=1)
 
         if self.is_calibration_mode == True:
             # publishes lane image in compressed type
-            self.pub_image_right = rospy.Publisher('/detect/image_output_sub1/compressed', CompressedImage, queue_size = 1)
-            self.pub_image_left = rospy.Publisher('/detect/image_output_sub2/compressed', CompressedImage, queue_size = 1)
+            self.pub_image_right = rospy.Publisher('/detect/image_output_sub1/compressed', CompressedImage,
+                                                   queue_size=1)
+            self.pub_image_left = rospy.Publisher('/detect/image_output_sub2/compressed', CompressedImage, queue_size=1)
 
         # output :raw
-        self.pub_lane = rospy.Publisher('/detect/lane', Float64, queue_size = 1)
+        self.pub_lane = rospy.Publisher('/detect/lane', Float64, queue_size=1)
 
         # subscribes state : left line reliability
         self.pub_left_line_reliability = rospy.Publisher('/detect/left_line_reliability', UInt8, queue_size=1)
@@ -52,8 +55,8 @@ class DetectLane():
 
         self.counter = 1
 
-        self.window_width = 1000.
-        self.window_height = 600.
+        self.window_width = 640.
+        self.window_height = 480.
 
         self.reliability_right_line = 100
         self.reliability_left_line = 100
@@ -98,11 +101,11 @@ class DetectLane():
         try:
             if left_fraction > 3000:
                 self.left_fitx, self.left_fit = self.fit_from_lines(self.left_fit, cv_left_lane)
-                self.mov_avg_left = np.append(self.mov_avg_left,np.array([self.left_fit]), axis=0)
+                self.mov_avg_left = np.append(self.mov_avg_left, np.array([self.left_fit]), axis=0)
 
             if right_fraction > 3000:
                 self.right_fitx, self.right_fit = self.fit_from_lines(self.right_fit, cv_right_lane)
-                self.mov_avg_right = np.append(self.mov_avg_right,np.array([self.right_fit]), axis=0)
+                self.mov_avg_right = np.append(self.mov_avg_right, np.array([self.right_fit]), axis=0)
         except:
             if left_fraction > 3000:
                 self.left_fitx, self.left_fit = self.sliding_windown(cv_left_lane, 'left')
@@ -130,9 +133,9 @@ class DetectLane():
         self.make_lane(cv_image, right_fraction, left_fraction)
 
     def maskRightLane(self, image):
-        mask0 = np.zeros(image.shape[0:2], dtype = "uint8")
+        mask0 = np.zeros(image.shape[0:2], dtype="uint8")
         # ------------------------    May 5 255->(255,255,255)    ---------------------
-        cv2.rectangle(mask0, (image.shape[1]//2, 0), (image.shape[1], image.shape[0]), (255,255,255), -1)
+        cv2.rectangle(mask0, (image.shape[1] // 2, 0), (image.shape[1], image.shape[0]), (255, 255, 255), -1)
         im = cv2.bitwise_and(image, image, mask=mask0)
         # 输入原始图像，返回白色部分数目和掩膜矩阵，发布掩膜的jpg图像
         # Convert BGR to HSV
@@ -153,7 +156,7 @@ class DetectLane():
         mask = cv2.inRange(hsv, lower_right, upper_right)
 
         # Bitwise-AND mask and original image,膜与原图与运算，除了白色部分，其余为黑色
-        res = cv2.bitwise_and(im, im, mask = mask)
+        res = cv2.bitwise_and(im, im, mask=mask)
 
         # 数出膜中非0个数，即白色像素个数
         fraction_num = np.count_nonzero(mask)
@@ -171,7 +174,7 @@ class DetectLane():
 
         # 遍历图像每一行
         for i in range(0, 480):
-            if np.count_nonzero(mask[i,::]) > 0:
+            if np.count_nonzero(mask[i, ::]) > 0:
                 how_much_short += 1
 
         # 为全黑的行的数目（断行）
@@ -189,7 +192,7 @@ class DetectLane():
         self.pub_right_line_reliability.publish(msg_white_line_reliability)
 
         if self.is_calibration_mode == True:
-            #mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+            # mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
             # error1 : CvBridgeError: encoding specified as bgr8, but image has incompatible type 8UC1
             # publishes white lane filtered image in compressed type
             self.pub_image_right.publish(self.cvBridge.cv2_to_compressed_imgmsg(mask, "jpg"))
@@ -197,8 +200,8 @@ class DetectLane():
         return fraction_num, mask
 
     def maskLeftLane(self, image):
-        mask0 = np.zeros(image.shape[0:2], dtype = "uint8")
-        cv2.rectangle(mask0, (0, 0), (image.shape[1]//2, image.shape[0]), (255,255,255), -1)
+        mask0 = np.zeros(image.shape[0:2], dtype="uint8")
+        cv2.rectangle(mask0, (0, 0), (image.shape[1] // 2, image.shape[0]), (255, 255, 255), -1)
         im = cv2.bitwise_and(image, image, mask=mask0)
         # Convert BGR to HSV
         hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
@@ -218,7 +221,7 @@ class DetectLane():
         mask = cv2.inRange(hsv, lower_left, upper_left)
 
         # Bitwise-AND mask and original image
-        res = cv2.bitwise_and(im, im, mask = mask)
+        res = cv2.bitwise_and(im, im, mask=mask)
 
         fraction_num = np.count_nonzero(mask)
 
@@ -233,7 +236,7 @@ class DetectLane():
         how_much_short = 0
 
         for i in range(0, 480):
-            if np.count_nonzero(mask[i,::]) > 0:
+            if np.count_nonzero(mask[i, ::]) > 0:
                 how_much_short += 1
 
         how_much_short = 480 - how_much_short
@@ -249,8 +252,8 @@ class DetectLane():
         msg_left_line_reliability.data = self.reliability_left_line
         self.pub_left_line_reliability.publish(msg_left_line_reliability)
 
-        #----------------------------   May 4   ------------------------------
-        #mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+        # ----------------------------   May 4   ------------------------------
+        # mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
         if self.is_calibration_mode == True:
             # publishes left lane filtered image in compressed type
             self.pub_image_left.publish(self.cvBridge.cv2_to_compressed_imgmsg(mask, "jpg"))
@@ -383,7 +386,8 @@ class DetectLane():
                 pts = np.hstack((pts_left, pts_right))
                 pts_center = np.array([np.transpose(np.vstack([centerx, ploty]))])
 
-                cv2.polylines(color_warp_lines, np.int_([pts_center]), isClosed=False, color=(0, 255, 255), thickness=12)
+                cv2.polylines(color_warp_lines, np.int_([pts_center]), isClosed=False, color=(0, 255, 255),
+                              thickness=12)
 
                 # Draw the lane onto the warped blank image
                 cv2.fillPoly(color_warp, np.int_([pts]), (0, 255, 0))
@@ -392,13 +396,15 @@ class DetectLane():
                 centerx = np.subtract(self.right_fitx, 320)
                 pts_center = np.array([np.transpose(np.vstack([centerx, ploty]))])
 
-                cv2.polylines(color_warp_lines, np.int_([pts_center]), isClosed=False, color=(0, 255, 255), thickness=12)
+                cv2.polylines(color_warp_lines, np.int_([pts_center]), isClosed=False, color=(0, 255, 255),
+                              thickness=12)
 
             if right_fraction <= 3000 and left_fraction > 3000:
                 centerx = np.add(self.left_fitx, 320)
                 pts_center = np.array([np.transpose(np.vstack([centerx, ploty]))])
 
-                cv2.polylines(color_warp_lines, np.int_([pts_center]), isClosed=False, color=(0, 255, 255), thickness=12)
+                cv2.polylines(color_warp_lines, np.int_([pts_center]), isClosed=False, color=(0, 255, 255),
+                              thickness=12)
 
         elif self.reliability_right_line <= 50 and self.reliability_left_line > 50:
             centerx = np.add(self.left_fitx, 320)
@@ -429,10 +435,9 @@ class DetectLane():
 
         self.pub_image_lane.publish(self.cvBridge.cv2_to_compressed_imgmsg(final, "jpg"))
 
-
-
     def main(self):
         rospy.spin()
+
 
 if __name__ == '__main__':
     rospy.init_node('detect_lane')

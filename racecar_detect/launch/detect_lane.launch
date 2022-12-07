@@ -8,7 +8,7 @@
     <rosparam command="load" file="$(find racecar_detect)/param/lane.yaml" />
     <param if="$(eval calibration_mode == 'calibration')" name="/is_detection_calibration_mode" value="True"/>
     <param if="$(eval calibration_mode == 'action')" name="/is_detection_calibration_mode" value="False"/>    
-    <remap from="/detect/image_input" to="/raw_img" />
+    <remap from="/detect/image_input" to="raw_img" />
     <remap from="/detect/image_input/compressed" to="/camera/image_projected_compensated/compressed" />
     <remap from="/detect/image_output" to="/detect/image_lane" />
     <remap from="/detect/image_output/compressed" to="/detect/image_lane/compressed" />
