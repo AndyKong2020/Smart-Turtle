@@ -170,12 +170,12 @@ class DetectLane():
         how_much_short = 0
 
         # 遍历图像每一行
-        for i in range(0, 600):
+        for i in range(0, 480):
             if np.count_nonzero(mask[i,::]) > 0:
                 how_much_short += 1
 
         # 为全黑的行的数目（断行）
-        how_much_short = 600 - how_much_short
+        how_much_short = 480 - how_much_short
 
         if how_much_short > 100:
             if self.reliability_right_line >= 5:
@@ -232,11 +232,11 @@ class DetectLane():
 
         how_much_short = 0
 
-        for i in range(0, 600):
+        for i in range(0, 480):
             if np.count_nonzero(mask[i,::]) > 0:
                 how_much_short += 1
         
-        how_much_short = 600 - how_much_short
+        how_much_short = 480 - how_much_short
 
         if how_much_short > 100:
             if self.reliability_left_line >= 5:
@@ -279,7 +279,7 @@ class DetectLane():
         return lane_fitx, lane_fit
 
     def sliding_windown(self, img_w, left_or_right):
-        histogram = np.sum(img_w[img_w.shape[0] / 2:, :], axis=0)
+        histogram = np.sum(img_w[int(img_w.shape[0] / 2):, :], axis=0)
 
         # Create an output image to draw on and visualize the result
         out_img = np.dstack((img_w, img_w, img_w)) * 255

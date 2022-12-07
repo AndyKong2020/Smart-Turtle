@@ -77,7 +77,7 @@ public:
         mv_driver->Init(deviceID);
         mv_driver->SetDefault();
         mv_driver->SetExposureTime(autoexposure_, 40000);
-        mv_driver->SetResolution(0, 640, 480, 0, 0);
+        mv_driver->SetResolution(1, 640, 480, 0, 0);
         mv_driver->SetFPS(fps_mode);
         mv_driver->Play();
 

@@ -22,7 +22,7 @@ catkin_python_setup()
 # Declare ROS dynamic reconfigure parameters
 ################################################################################
 generate_dynamic_reconfigure_options(
-  cfg/DetectLaneParams.cfg
+        cfg/DetectLaneParamsConfig.cfg
 )
 
 ################################################################################
