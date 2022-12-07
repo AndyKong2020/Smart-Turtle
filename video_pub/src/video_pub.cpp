@@ -23,7 +23,7 @@ Size large_size = Size(640, 512);
 Size small_size = Size(640, 480);
 //Size dist_size=large_size;
 Size dist_size=small_size;
-string video_source;
+string video_source = "/home/andykong/Downloads/qq-files/243604572/file_recv/lane_test.mp4";
 Mat img_show;
 
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 
   ros::Rate loop_rate(30);
   //cuda_proc processor(1024,1280);
-  VideoCapture cap("/home/andykong/Downloads/qq-files/243604572/file_recv");//open video in the path
+  VideoCapture cap(video_source);//open video in the path
   if(!cap.isOpened())
   {
     std::cout<<"open video failed!"<<std::endl;
