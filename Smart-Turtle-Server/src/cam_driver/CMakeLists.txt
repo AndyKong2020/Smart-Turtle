@@ -28,8 +28,8 @@ include_directories(
 #set(CMAKE_BUILD_TYPE Release)
 
 add_executable(${PROJECT_NAME}_node
-    src/MVCamera_node.cpp
-    src/MVCamera.cpp
+        src/MVCamera_node.cpp
+        src/MVCamera.cpp
     )
 
 ## Rename C++ executable without prefix

@@ -36,7 +36,7 @@ include_directories(
 #     )
 
  add_executable(${PROJECT_NAME}_node
-     src/video_pub.cpp
+         src/video_pub.cpp
      )
      
  add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
