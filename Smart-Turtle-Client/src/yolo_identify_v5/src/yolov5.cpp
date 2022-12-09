@@ -17,7 +17,6 @@
 #include "yolo/utils.h"
 #include "yolo/calibrator.h"
 #include "yolo/preprocess.h"
-#include "rc_msgs/stepConfig.h"
 #include <string>
 
 #define USE_FP16  // set USE_INT8 or USE_FP16 or USE_FP32
@@ -420,11 +419,6 @@ void imageCallback(const sensor_msgs::ImageConstPtr &msg) {
     resPub.publish(Result);
 }
 
-void callback(const rc_msgs::stepConfig &config) {
-    step = config.step;
-}
-
-
 void beatSend() {
     std::chrono::milliseconds duration(500);
     while (beatRun) {
@@ -489,9 +483,6 @@ int main(int argc, char **argv) {
     ros::Subscriber imageSub = n.subscribe("/MVCamera/image_raw", 1, &imageCallback);
     resPub = n.advertise<rc_msgs::results>("/rcnn_results", 20);
     beatPub = n.advertise<std_msgs::Bool>("/nn_beat", 5);
-    dynamic_reconfigure::Client<rc_msgs::stepConfig> client("/scheduler");
-
-    client.setConfigurationCallback(&callback);
 
     std::thread beatThread = std::thread(&beatSend);
 

@@ -15,10 +15,8 @@
 #include "rc_msgs/results.h"
 #include "rc_msgs/point.h"
 #include "std_msgs/Bool.h"
-#include "rc_msgs/stepConfig.h"
 //ros   //msgs
 #include <sensor_msgs/Image.h>
-#include <rc_msgs/stepConfig.h>
 #include "rc_msgs/detection.h"
 #include "rc_msgs/results.h"
 #include "rc_msgs/point.h"
@@ -186,10 +184,6 @@ void imageCallback(const sensor_msgs::ImageConstPtr &msg) {
     resPub.publish(Result);
 }
 
-void callback(const rc_msgs::stepConfig &config) {
-    step = config.step;
-}
-
 
 void beatSend() {
     std::chrono::milliseconds duration(500);
@@ -256,9 +250,7 @@ int main(int argc, char **argv) {
     ros::Subscriber imageSub = n.subscribe("/raw_img", 1, &imageCallback);
     resPub = n.advertise<rc_msgs::results>("/rcnn_results", 20);
     beatPub = n.advertise<std_msgs::Bool>("/nn_beat", 5);
-    dynamic_reconfigure::Client<rc_msgs::stepConfig> client("/scheduler");
 
-    client.setConfigurationCallback(&callback);
 
     std::thread beatThread = std::thread(&beatSend);
 
