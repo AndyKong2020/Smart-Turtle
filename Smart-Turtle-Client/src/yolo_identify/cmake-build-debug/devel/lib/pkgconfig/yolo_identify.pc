@@ -1,0 +1,8 @@
+prefix=/home/stevegao/CLionProjects/RoboCup/rosws/src/yolo_identify/cmake-build-debug/devel
+
+Name: yolo_identify
+Description: Description of yolo_identify
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
