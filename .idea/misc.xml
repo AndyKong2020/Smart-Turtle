@@ -3,4 +3,7 @@
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/Smart-Turtle-Legs">
     <contentRoot DIR="$PROJECT_DIR$" />
   </component>
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/Smart-Turtle-Server/src">
+    <contentRoot DIR="$PROJECT_DIR$" />
+  </component>
 </project>
