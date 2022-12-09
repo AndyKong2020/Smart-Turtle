@@ -1,0 +1,8 @@
+prefix=/home/stevegao/CLionProjects/Smart-Turtle/devel
+
+Name: mv_driver
+Description: Description of mv_driver
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/stevegao/CLionProjects/Smart-Turtle/devel
+
+Name: video_pub
+Description: Description of video_pub
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
