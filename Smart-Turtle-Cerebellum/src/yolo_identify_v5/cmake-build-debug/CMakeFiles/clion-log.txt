@@ -1,0 +1,62 @@
+/home/stevegao/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/222.4345.21/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /home/stevegao/CLionProjects/Smart-Turtle/Smart-Turtle-Client/src/yolo_identify_v5 -B /home/stevegao/CLionProjects/Smart-Turtle/Smart-Turtle-Client/src/yolo_identify_v5/cmake-build-debug
+-- Using CATKIN_DEVEL_PREFIX: /home/stevegao/CLionProjects/Smart-Turtle/Smart-Turtle-Client/src/yolo_identify_v5/cmake-build-debug/devel
+-- Using CMAKE_PREFIX_PATH: /opt/ros/noetic
+-- This workspace overlays: /opt/ros/noetic
+-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+-- Using PYTHON_EXECUTABLE: /usr/bin/python3
+-- Using Debian Python package layout
+-- Using empy: /usr/lib/python3/dist-packages/em.py
+-- Using CATKIN_ENABLE_TESTING: ON
+-- Call enable_testing()
+-- Using CATKIN_TEST_RESULTS_DIR: /home/stevegao/CLionProjects/Smart-Turtle/Smart-Turtle-Client/src/yolo_identify_v5/cmake-build-debug/test_results
+-- Forcing gtest/gmock from source, though one was otherwise available.
+-- Found gtest sources under '/usr/src/googletest': gtests will be built
+-- Found gmock sources under '/usr/src/googletest': gmock will be built
+CMake Deprecation Warning at /usr/src/googletest/CMakeLists.txt:4 (cmake_minimum_required):
+  Compatibility with CMake < 2.8.12 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+
+
+CMake Deprecation Warning at /usr/src/googletest/googlemock/CMakeLists.txt:45 (cmake_minimum_required):
+  Compatibility with CMake < 2.8.12 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+
+
+CMake Deprecation Warning at /usr/src/googletest/googletest/CMakeLists.txt:56 (cmake_minimum_required):
+  Compatibility with CMake < 2.8.12 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+
+
+-- Found PythonInterp: /usr/bin/python3 (found version "3.8.10") 
+-- Using Python nosetests: /usr/bin/nosetests3
+-- catkin 0.8.10
+-- BUILD_SHARED_LIBS is on
+-- Could NOT find rc_msgs (missing: rc_msgs_DIR)
+-- Could not find the required component 'rc_msgs'. The following CMake error indicates that you either need to install the package with the same name or change your environment so that it can be found.
+CMake Error at /opt/ros/noetic/share/catkin/cmake/catkinConfig.cmake:83 (find_package):
+  Could not find a package configuration file provided by "rc_msgs" with any
+  of the following names:
+
+    rc_msgsConfig.cmake
+    rc_msgs-config.cmake
+
+  Add the installation prefix of "rc_msgs" to CMAKE_PREFIX_PATH or set
+  "rc_msgs_DIR" to a directory containing one of the above files.  If
+  "rc_msgs" provides a separate development package or SDK, be sure it has
+  been installed.
+Call Stack (most recent call first):
+  CMakeLists.txt:12 (find_package)
+
+
+-- Configuring incomplete, errors occurred!
+See also "/home/stevegao/CLionProjects/Smart-Turtle/Smart-Turtle-Client/src/yolo_identify_v5/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "/home/stevegao/CLionProjects/Smart-Turtle/Smart-Turtle-Client/src/yolo_identify_v5/cmake-build-debug/CMakeFiles/CMakeError.log".

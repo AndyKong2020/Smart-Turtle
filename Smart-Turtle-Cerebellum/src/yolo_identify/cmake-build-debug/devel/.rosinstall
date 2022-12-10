@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/stevegao/CLionProjects/RoboCup/rosws/src/yolo_identify/cmake-build-debug/devel/setup.sh

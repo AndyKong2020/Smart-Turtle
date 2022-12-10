@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: rc_msgs
+Description: Description of rc_msgs
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: 

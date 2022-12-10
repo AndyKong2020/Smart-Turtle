@@ -1,0 +1,2 @@
+set(rc_msgs_MESSAGE_FILES "/home/stevegao/CLionProjects/Smart-Turtle/Smart-Turtle-Client/src/rc_msgs/msg/point.msg;/home/stevegao/CLionProjects/Smart-Turtle/Smart-Turtle-Client/src/rc_msgs/msg/detection.msg;/home/stevegao/CLionProjects/Smart-Turtle/Smart-Turtle-Client/src/rc_msgs/msg/results.msg;/home/stevegao/CLionProjects/Smart-Turtle/Smart-Turtle-Client/src/rc_msgs/msg/calibrateResult.msg")
+set(rc_msgs_SERVICE_FILES "")
