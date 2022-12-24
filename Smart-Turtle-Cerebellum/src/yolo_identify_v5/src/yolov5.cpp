@@ -10,6 +10,8 @@
 #include "rc_msgs/detection.h"
 #include "rc_msgs/results.h"
 #include "rc_msgs/point.h"
+#include "rc_msgs/single_result.h"
+#include "rc_msgs/identify_results.h"
 #include "std_msgs/Bool.h"
 #include "yolo/cuda_utils.h"
 #include "yolo/logging.h"
@@ -356,6 +358,7 @@ std::atomic<bool> beatRun(true);
 int step = 0;
 ros::Publisher resPub;
 ros::Publisher beatPub;
+ros::Publisher identifyPub;
 float *buffers[2];
 uint8_t *img_host = nullptr;
 uint8_t *img_device = nullptr;
@@ -369,6 +372,7 @@ static const char *labels[10] = {"1", "2", "3", "4", "5", "6", "A", "B", "C", "D
 void imageCallback(const sensor_msgs::ImageConstPtr &msg) {
 
     rc_msgs::results Result;
+    rc_msgs::identify_results Identify_results;
     cv::Mat img = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8)->image;
     Result.step = step;
 
@@ -401,6 +405,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr &msg) {
         tmp.y2 = r.y + r.height;
         tmp.label = (int) re.class_id;
         tmp.score = re.conf;
+        rc_msgs::single_result t;
+        t.score = tmp.score;
+        t.result = labels[tmp.label];
+        t.x_coordinate = r.x + r.width / 2;
+        t.y_coordinate = r.y + r.height / 2;
         std::cout << labels[tmp.label] << "   " << tmp.score << "   " << r.x + r.width / 2 << "   "
                   << r.y + r.height / 2 << std::endl;
         std::vector<rc_msgs::point> ps(4);
@@ -414,9 +423,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr &msg) {
         ps[3].y = r.y + r.height;
         tmp.contours = ps;
         Result.results.push_back(tmp);
+        Identify_results.identify_results.push_back(t);
     }
     Result.color = *(cv_bridge::CvImage(std_msgs::Header(), "bgr8", img).toImageMsg());
     resPub.publish(Result);
+    identifyPub.publish(Identify_results);
 }
 
 void beatSend() {
@@ -483,6 +494,7 @@ int main(int argc, char **argv) {
     ros::Subscriber imageSub = n.subscribe("/MVCamera/image_raw", 1, &imageCallback);
     resPub = n.advertise<rc_msgs::results>("/rcnn_results", 20);
     beatPub = n.advertise<std_msgs::Bool>("/nn_beat", 5);
+    identifyPub = n.advertise<rc_msgs::identify_results>("/identify_results", 20);
 
     std::thread beatThread = std::thread(&beatSend);
 
