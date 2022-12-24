@@ -40,3 +40,7 @@ include_directories(
         # include
         ${catkin_INCLUDE_DIRS}
 )
+
+add_executable(${PROJECT_NAME}_node
+        src/main.cpp
+        )
