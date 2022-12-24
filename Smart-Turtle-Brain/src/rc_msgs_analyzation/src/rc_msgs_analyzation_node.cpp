@@ -16,11 +16,10 @@ void identifyResultsCallback(const rc_msgs::identify_results::ConstPtr &msg) {
     analyzation.y_coordinate = 0.0;
     rc_msgs::identify_results identifyResults;
     identifyResults.identify_results = msg->identify_results;
-    unsigned long length = identifyResults.identify_results.max_size();
+    int length = identifyResults.identify_results.size();
     std::cout << "length: " << length << std::endl;
     for (int i = 0; i < length; i++) {
         analyzation.result = identifyResults.identify_results[i].result;
-        if (i == 0) { std::cout << length << std::endl; }
         std::cout << "result: " << analyzation.result << std::endl;
         analyzation.score = identifyResults.identify_results[i].score;
         std::cout << "score: " << analyzation.score << std::endl;
