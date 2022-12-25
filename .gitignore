@@ -1,2 +1,15 @@
 
 .vscode/
+/Smart-Turtle-Brain/devel/
+/Smart-Turtle-Brain/build/
+/Smart-Turtle-Brain/src/cmake-build-debug/
+/Smart-Turtle-Brain/src/cmake-build-debug-event-trace/
+/Smart-Turtle-Brain/src/mv_driver/cmake-build-debug/
+/Smart-Turtle-Brain/src/rc_msgs/cmake-build-debug/
+/cmake-build-debug/
+/Smart-Turtle-Cerebellum/devel/
+/Smart-Turtle-Cerebellum/build/
+/Smart-Turtle-Cerebellum/src/cmake-build-debug/
+/Smart-Turtle-Cerebellum/src/rc_msgs/cmake-build-debug/
+/Smart-Turtle-Cerebellum/src/yolo_identify/cmake-build-debug/
+/Smart-Turtle-Cerebellum/src/yolo_identify_v5/cmake-build-debug/
